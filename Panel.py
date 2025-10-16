@@ -73,7 +73,11 @@ class Panel:
         # Vùng nút bấm sinh lời giải tự động
         tk.Label(self.right_frame, text='Solver', font=("Arial", 12, "bold")).pack(pady = 5)
 
-        tk.Button(self.right_frame, text = "Basic solution", font=("Arial", 12), command = Solver.basic_solution).pack(side = 'top')
+        tk.Button(self.right_frame, text = "Basic solution", font=("Arial", 12), 
+                  command = self.basic_solution_btn).pack(side = 'top')
+        
+        tk.Button(self.right_frame, text = "Physic solution", font=("Arial", 12), 
+                  command = self.physic_solution_btn).pack(side = 'top')
 
         # Vùng nút trả lời
         tk.Label(self.right_frame, text='Answer', font=("Arial", 12, "bold")).pack(pady = 5)
@@ -104,6 +108,18 @@ class Panel:
     def send_answer_btn(self, question_id, answer_id):
         self.game.send_answer(question_id, answer_id)
         
+    def basic_solution_btn(self):
+        self.game.make_new_attempt()
+        for _ in Solver.basic_solution(self.game):
+            self.update_field()
+            self.root.update()
+
+    def physic_solution_btn(self):
+        self.game.make_new_attempt()
+        for _ in Solver.physic_solution(self.game):
+            self.update_field()
+            self.root.update()
+
     def render_field(self):
         """Render field — tô xanh các ô có ô kề cùng giá trị, còn lại đỏ."""
         for widget in self.left_frame.winfo_children():
@@ -124,7 +140,7 @@ class Panel:
                         same_adjacent = True
                         break
 
-                color = "#00cc44" if same_adjacent else "#ff4444"  # xanh nếu có cặp
+                color = "#81c784" if same_adjacent else "#ef9a9a"  # xanh nếu có cặp
 
                 lbl = tk.Label(
                     self.left_frame,
